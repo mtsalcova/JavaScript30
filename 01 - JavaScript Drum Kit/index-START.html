@@ -7,7 +7,6 @@
 </head>
 <body>
 
-
   <div class="keys">
     <div data-key="65" class="key">
       <kbd>A</kbd>
@@ -58,6 +57,56 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  (function() {
+
+    const LIST_KEYS = Array.from(document.querySelectorAll('.key'));
+
+    function initEvents() {
+      window.addEventListener('keydown', initAppByKeyboard);
+      initAppByClick();
+      ListenerTransitionEnd();
+    }
+
+    function initAppByKeyboard(event) {
+      initApp(event.keyCode);
+    }
+
+    function initAppByClick() {
+      LIST_KEYS.forEach((el) => {
+        el.addEventListener('click', (ev) => initApp(ev.currentTarget.dataset.key));
+      });
+    }
+
+    function initApp(keyCode) {
+      const keyElement = document.querySelector(`.key[data-key='${keyCode}']`);
+      if (!keyElement) return;
+
+      const audioElement = document.querySelector(`audio[data-key='${keyCode}']`);
+      playAudio(audioElement);
+      setClass(keyElement);
+    }
+
+    function playAudio(element) {
+      element.currentTime = 0;
+      element.play();
+    }
+
+    function setClass(element) {
+      element.classList.add('playing');
+    }
+
+    function removeClass(ev) {
+      if (ev.propertyName !== 'transform') return;
+      this.classList.remove('playing');
+    }
+
+    function ListenerTransitionEnd() {
+      LIST_KEYS.forEach(el => el.addEventListener('transitionend', removeClass));
+    }
+
+    initEvents();
+
+  })();
 
 </script>
 
