@@ -61,14 +61,56 @@
       height: 6px;
       background: black;
       position: absolute;
+      transform-origin: 100%;
+      transform: rotate(90deg);
       top: 50%;
+      transition: all 0.05s cubic-bezier(0.1, 2.7, 0.58, 1);
+    }
+
+    .hour-hand {
+      background-color: red;
     }
 
   </style>
 
-  <script>
+  <script>  
+    (function() {
 
+      function iniClock() {
+        const now = new Date();
+        setSeconds(now);
+        setMinutes(now);
+        setHours(now);
+      }
 
+      function setSeconds(date) {
+        const secondsDegress = transformTimeToDegree(date.getSeconds());
+        rotateElement('.second-hand', secondsDegress);
+      }
+
+      function setMinutes(date) {
+        const minutesDegress = transformTimeToDegree(date.getMinutes());
+        rotateElement('.min-hand', minutesDegress);
+      }
+
+      function setHours(date) {
+        const hoursDegress = transformTimeToDegree(date.getHours(), 12);
+        rotateElement('.hour-hand', hoursDegress);
+      }
+
+      function transformTimeToDegree(time, divider = 60) {
+        const defaultHandsDegree = 90;
+        return ((time / divider) * 360) + defaultHandsDegree;
+      }
+
+      function rotateElement(className, degree) {
+        const element = document.querySelector(className);
+        element.style.transform = `rotate(${degree}deg)`;
+      }
+
+      setInterval(iniClock, 1000);
+
+    })();
   </script>
 </body>
 </html>
